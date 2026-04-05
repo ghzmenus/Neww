@@ -1,0 +1,617 @@
+-- ============================================================================
+-- GS MENU V4 - Interface Atualizada com Grid Layout 2 Colunas
+-- Sistema de Toggles com Nova Estrutura Visual
+-- ============================================================================
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- ============================================================================
+-- CORES / COLORS
+-- ============================================================================
+
+local COLOR_BACKGROUND = Color3.fromRGB(10, 10, 10)
+local COLOR_CONTENT_BG = Color3.fromRGB(15, 15, 15)
+local COLOR_NEON_PURPLE = Color3.fromRGB(170, 0, 255)
+local COLOR_WHITE = Color3.fromRGB(255, 255, 255)
+local COLOR_GRAY = Color3.fromRGB(100, 100, 100)
+local COLOR_GRAY_DARK = Color3.fromRGB(50, 50, 50)
+local COLOR_TOGGLE_OFF = Color3.fromRGB(180, 180, 180)
+
+-- ============================================================================
+-- VARIÁVEIS DE ESTADO / STATE VARIABLES
+-- ============================================================================
+
+local selectedTab = "HOME"
+local allTabs = {"HOME", "COMBATE", "VISUAL", "CAR", "TROLL"}
+
+local tabContents = {
+	HOME = {
+		items = {"NOCLIP", "FLY", "BREV", "BREV", "BREV", "BREV"}
+	},
+	COMBATE = {
+		items = {"AIMBOT", "SHOWFV", "WALLCK", "BREV", "BREV", "BREV"}
+	},
+	VISUAL = {
+		items = {"ESP NAME", "ESP LIFE", "ESP TRACE", "ESP BOX", "ESP HEAD", "STAFF LIST"}
+	},
+	CAR = {
+		items = {"ESP CAR", "FLY CAR", "NOCLIP", "BREV", "BREV", "BREV"}
+	},
+	TROLL = {
+		items = {"NOWALL", "PUXAR TODOS", "BREV", "BREV", "BREV", "BREV"}
+	}
+}
+
+-- ============================================================================
+-- SCRIPTS URLS COM LOADSTRING COMPLETO
+-- ============================================================================
+
+local SCRIPT_URLS = {
+	-- HOME TAB
+	FLY = {
+		on = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/FLY_ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/FLY_OFF.lua"))() end
+	},
+	NOCLIP = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/NO%20CLIP%20On.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/NOCLIP%20OFF.lua"))() end
+	},
+	BREV = {
+		on = function() print("[GS MENU] EM BREVE") end,
+		off = function() print("[GS MENU] EM BREVE") end
+	},
+	
+	-- COMBATE TAB
+	AIMBOT = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/AIMLOCK.ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/Aimlock.off.lua"))() end
+	},
+	SHOWFV = {
+		on = function() print("[GS MENU] SHOWFV - EM BREVE") end,
+		off = function() print("[GS MENU] SHOWFV - EM BREVE") end
+	},
+	WALLCK = {
+		on = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/WALLCK_ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/WALLCK_OFF.lua"))() end
+	},
+	
+	-- VISUAL TAB
+	["ESP NAME"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20NAME%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20NAME%20OFF.lua"))() end
+	},
+	["ESP TRACE"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20TRACE%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20TRACE%20OFF.lua"))() end
+	},
+	["ESP BOX"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20BOX%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20BOX%20OFF.lua"))() end
+	},
+	["ESP LIFE"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20LIFE%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20LIFE%20OFF.lua"))() end
+	},
+	["ESP HEAD"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20HEAD%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20HEAD%20OFF.lua"))() end
+	},
+	["ESP RAGE"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20DIATANCIA%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20DIATANCIA%20OFF.lua"))() end
+	},
+	["STAFF LIST"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/Staff%20LIST%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/STAFF%20LIST%20OFF.lua"))() end
+	},
+	
+	-- CAR TAB
+	["ESP CAR"] = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20CAR%20ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/ESP%20CAR%20OFF.lua"))() end
+	},
+	["FLY CAR"] = {
+		on = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/FLY_CAR_ON.lua"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://seu-raw-script.com/FLY_CAR_OFF.lua"))() end
+	},
+	
+	-- TROLL TAB
+	NOWALL = {
+		on = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/NO%20WALL%20ON.LUA"))() end,
+		off = function() loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ghzmenu/GHZ-MENU-SCRIPTS-P-BLICOS/main/No%20wall%20off.lua"))() end
+	},
+	["PUXAR TODOS"] = {
+		on = function() print("[GS MENU] PUXAR TODOS - EM BREVE") end,
+		off = function() print("[GS MENU] PUXAR TODOS - EM BREVE") end
+	}
+}
+
+local dragState = {
+	isDragging = false,
+	dragStart = nil,
+	startPos = nil,
+	dragInput = nil
+}
+
+-- ============================================================================
+-- CRIAR SCREENGUI / CREATE SCREENGUI
+-- ============================================================================
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "GSMenuGUI"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+
+-- ============================================================================
+-- CRIAR HEADER / CREATE HEADER
+-- ============================================================================
+
+local headerBar = Instance.new("Frame")
+headerBar.Name = "HeaderBar"
+headerBar.Size = UDim2.new(0.75, 0, 0, 50)
+headerBar.Position = UDim2.new(0.125, 0, 0.05, 0)
+headerBar.BackgroundColor3 = COLOR_BACKGROUND
+headerBar.BorderSizePixel = 0
+headerBar.Parent = screenGui
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 12)
+headerCorner.Parent = headerBar
+
+local headerStroke = Instance.new("UIStroke")
+headerStroke.Color = COLOR_NEON_PURPLE
+headerStroke.Thickness = 2
+headerStroke.Transparency = 0
+headerStroke.LineJoinMode = Enum.LineJoinMode.Round
+headerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+headerStroke.Parent = headerBar
+
+-- ============================================================================
+-- HEADER TITLE TEXT
+-- ============================================================================
+
+local titleText = Instance.new("TextLabel")
+titleText.Name = "TitleText"
+titleText.Text = "GS MENU [sintonia rp]"
+titleText.TextColor3 = COLOR_WHITE
+titleText.Font = Enum.Font.GothamBold
+titleText.TextSize = 18
+titleText.TextXAlignment = Enum.TextXAlignment.Left
+titleText.TextYAlignment = Enum.TextYAlignment.Center
+titleText.BackgroundTransparency = 1
+titleText.BorderSizePixel = 0
+titleText.Size = UDim2.new(0.5, 0, 1, 0)
+titleText.Position = UDim2.new(0.03, 0, 0, 0)
+titleText.Parent = headerBar
+
+-- ============================================================================
+-- STATUS ONLINE TEXT
+-- ============================================================================
+
+local statusText = Instance.new("TextLabel")
+statusText.Name = "StatusText"
+statusText.Text = "STATUS:  ONLINE"
+statusText.TextColor3 = COLOR_WHITE
+statusText.Font = Enum.Font.GothamBold
+statusText.TextSize = 12
+statusText.TextXAlignment = Enum.TextXAlignment.Right
+statusText.TextYAlignment = Enum.TextYAlignment.Center
+statusText.BackgroundTransparency = 1
+statusText.BorderSizePixel = 0
+statusText.Size = UDim2.new(0.4, 0, 1, 0)
+statusText.Position = UDim2.new(0.3, 0, 0, 0)
+statusText.Parent = headerBar
+
+-- ============================================================================
+-- MENU ICON (HAMBURGER)
+-- ============================================================================
+
+local menuIconContainer = Instance.new("Frame")
+menuIconContainer.Name = "MenuIcon"
+menuIconContainer.Size = UDim2.new(0, 40, 0, 40)
+menuIconContainer.Position = UDim2.new(0.93, 0, 0.5, -20)
+menuIconContainer.BackgroundTransparency = 1
+menuIconContainer.BorderSizePixel = 0
+menuIconContainer.Parent = headerBar
+
+-- Linha 1
+local line1 = Instance.new("Frame")
+line1.Size = UDim2.new(0, 25, 0, 2)
+line1.Position = UDim2.new(0, 7, 0, 8)
+line1.BackgroundColor3 = COLOR_WHITE
+line1.BorderSizePixel = 0
+line1.Parent = menuIconContainer
+
+-- Linha 2
+local line2 = Instance.new("Frame")
+line2.Size = UDim2.new(0, 25, 0, 2)
+line2.Position = UDim2.new(0, 7, 0, 19)
+line2.BackgroundColor3 = COLOR_WHITE
+line2.BorderSizePixel = 0
+line2.Parent = menuIconContainer
+
+-- Linha 3
+local line3 = Instance.new("Frame")
+line3.Size = UDim2.new(0, 25, 0, 2)
+line3.Position = UDim2.new(0, 7, 0, 30)
+line3.BackgroundColor3 = COLOR_WHITE
+line3.BorderSizePixel = 0
+line3.Parent = menuIconContainer
+
+-- ============================================================================
+-- MAIN CONTENT FRAME
+-- ============================================================================
+
+local mainContent = Instance.new("Frame")
+mainContent.Name = "MainContent"
+mainContent.Size = UDim2.new(0.75, 0, 0.75, 0)
+mainContent.Position = UDim2.new(0.125, 0, 0.1, 50)
+mainContent.BackgroundColor3 = COLOR_BACKGROUND
+mainContent.BorderSizePixel = 0
+mainContent.Parent = screenGui
+
+local mainContentCorner = Instance.new("UICorner")
+mainContentCorner.CornerRadius = UDim.new(0, 12)
+mainContentCorner.Parent = mainContent
+
+local mainContentStroke = Instance.new("UIStroke")
+mainContentStroke.Color = COLOR_NEON_PURPLE
+mainContentStroke.Thickness = 2
+mainContentStroke.Transparency = 0
+mainContentStroke.LineJoinMode = Enum.LineJoinMode.Round
+mainContentStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+mainContentStroke.Parent = mainContent
+
+-- ============================================================================
+-- CRIAR TABS SIDEBAR / CREATE TABS SIDEBAR
+-- ============================================================================
+
+local tabsSidebar = Instance.new("Frame")
+tabsSidebar.Name = "TabsSidebar"
+tabsSidebar.Size = UDim2.new(0.15, 0, 1, 0)
+tabsSidebar.Position = UDim2.new(0, 0, 0, 0)
+tabsSidebar.BackgroundTransparency = 1
+tabsSidebar.BorderSizePixel = 0
+tabsSidebar.Parent = mainContent
+
+-- ============================================================================
+-- DIVIDER LINE
+-- ============================================================================
+
+local dividerLine = Instance.new("Frame")
+dividerLine.Name = "DividerLine"
+dividerLine.Size = UDim2.new(0, 2, 1, 0)
+dividerLine.Position = UDim2.new(0.15, -1, 0, 0)
+dividerLine.BackgroundColor3 = COLOR_NEON_PURPLE
+dividerLine.BorderSizePixel = 0
+dividerLine.Parent = mainContent
+
+-- ============================================================================
+-- CONTENT AREA
+-- ============================================================================
+
+local contentArea = Instance.new("Frame")
+contentArea.Name = "ContentArea"
+contentArea.Size = UDim2.new(0.85, 0, 1, 0)
+contentArea.Position = UDim2.new(0.15, 0, 0, 0)
+contentArea.BackgroundTransparency = 1
+contentArea.BorderSizePixel = 0
+contentArea.Parent = mainContent
+
+-- ============================================================================
+-- FUNÇÃO PARA EXECUTAR SCRIPTS / EXECUTE SCRIPTS
+-- ============================================================================
+
+local function executeScript(scriptFunc, featureName, isActivating)
+	if scriptFunc == nil then
+		print("[GS MENU] ⚠️ Função de script vazia para: " .. featureName)
+		return
+	end
+	
+	pcall(function()
+		scriptFunc()
+		local state = isActivating and "✓ ATIVADO" or "✓ DESATIVADO"
+		print("[GS MENU] " .. featureName .. " " .. state)
+	end)
+end
+
+-- ============================================================================
+-- FUNÇÃO PARA CRIAR TOGGLE / FUNCTION TO CREATE TOGGLE
+-- ============================================================================
+
+local function createToggle(parent, name, index)
+	local toggleContainer = Instance.new("Frame")
+	toggleContainer.Name = name .. "Container"
+	toggleContainer.Size = UDim2.new(1, 0, 0, 35)
+	toggleContainer.Position = UDim2.new(0, 0, 0, (index - 1) * 40)
+	toggleContainer.BackgroundTransparency = 1
+	toggleContainer.BorderSizePixel = 0
+	toggleContainer.Parent = parent
+
+	-- Toggle label
+	local toggleLabel = Instance.new("TextLabel")
+	toggleLabel.Name = name .. "Label"
+	toggleLabel.Text = name
+	toggleLabel.TextColor3 = COLOR_WHITE
+	toggleLabel.Font = Enum.Font.GothamBold
+	toggleLabel.TextSize = 14
+	toggleLabel.BackgroundTransparency = 1
+	toggleLabel.BorderSizePixel = 0
+	toggleLabel.Size = UDim2.new(0.6, 0, 1, 0)
+	toggleLabel.Position = UDim2.new(0, 0, 0, 0)
+	toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	toggleLabel.TextYAlignment = Enum.TextYAlignment.Center
+	toggleLabel.Parent = toggleContainer
+
+	-- Toggle button
+	local toggleButton = Instance.new("Frame")
+	toggleButton.Name = name .. "Button"
+	toggleButton.Size = UDim2.new(0, 50, 0, 24)
+	toggleButton.Position = UDim2.new(0.6, 0, 0.5, -12)
+	toggleButton.BackgroundColor3 = COLOR_TOGGLE_OFF
+	toggleButton.BorderSizePixel = 0
+	toggleButton.Parent = toggleContainer
+
+	local toggleCorner = Instance.new("UICorner")
+	toggleCorner.CornerRadius = UDim.new(0, 12)
+	toggleCorner.Parent = toggleButton
+
+	-- Toggle circle
+	local toggleCircle = Instance.new("Frame")
+	toggleCircle.Name = name .. "Circle"
+	toggleCircle.Size = UDim2.new(0, 20, 0, 20)
+	toggleCircle.Position = UDim2.new(0, 2, 0.5, -10)
+	toggleCircle.BackgroundColor3 = COLOR_WHITE
+	toggleCircle.BorderSizePixel = 0
+	toggleCircle.Parent = toggleButton
+
+	local circleCorner = Instance.new("UICorner")
+	circleCorner.CornerRadius = UDim.new(0, 10)
+	circleCorner.Parent = toggleCircle
+
+	local isEnabled = false
+
+	local clickableButton = Instance.new("TextButton")
+	clickableButton.Name = name .. "Clickable"
+	clickableButton.Text = ""
+	clickableButton.BackgroundTransparency = 1
+	clickableButton.BorderSizePixel = 0
+	clickableButton.Size = UDim2.new(1, 0, 1, 0)
+	clickableButton.Position = UDim2.new(0, 0, 0, 0)
+	clickableButton.Parent = toggleContainer
+
+	clickableButton.MouseButton1Click:Connect(function()
+		isEnabled = not isEnabled
+		
+		if isEnabled then
+			toggleButton.BackgroundColor3 = COLOR_NEON_PURPLE
+			toggleCircle.Position = UDim2.new(0, 28, 0.5, -10)
+			if SCRIPT_URLS[name] then
+				executeScript(SCRIPT_URLS[name].on, name, true)
+			end
+		else
+			toggleButton.BackgroundColor3 = COLOR_TOGGLE_OFF
+			toggleCircle.Position = UDim2.new(0, 2, 0.5, -10)
+			if SCRIPT_URLS[name] then
+				executeScript(SCRIPT_URLS[name].off, name, false)
+			end
+		end
+		
+		print("[GS MENU] " .. name .. " - Estado: " .. tostring(isEnabled))
+	end)
+
+	return toggleContainer
+end
+
+-- ============================================================================
+-- FUNÇÃO PARA CRIAR TAB CONTENT / FUNCTION TO CREATE TAB CONTENT
+-- ============================================================================
+
+local function createTabContent(tabName)
+	local tabContent = Instance.new("Frame")
+	tabContent.Name = tabName .. "TabContent"
+	tabContent.Size = UDim2.new(1, 0, 1, 0)
+	tabContent.Position = UDim2.new(0, 0, 0, 0)
+	tabContent.BackgroundTransparency = 1
+	tabContent.BorderSizePixel = 0
+	tabContent.Visible = (tabName == "HOME")
+	tabContent.Parent = contentArea
+
+	-- Padding frame
+	local paddingFrame = Instance.new("Frame")
+	paddingFrame.Name = "PaddingFrame"
+	paddingFrame.Size = UDim2.new(0.95, 0, 0.95, 0)
+	paddingFrame.Position = UDim2.new(0.025, 0, 0.025, 0)
+	paddingFrame.BackgroundTransparency = 1
+	paddingFrame.BorderSizePixel = 0
+	paddingFrame.Parent = tabContent
+
+	-- Grid layout container
+	local gridContainer = Instance.new("Frame")
+	gridContainer.Name = "GridContainer"
+	gridContainer.Size = UDim2.new(1, 0, 1, 0)
+	gridContainer.Position = UDim2.new(0, 0, 0, 0)
+	gridContainer.BackgroundTransparency = 1
+	gridContainer.BorderSizePixel = 0
+	gridContainer.Parent = paddingFrame
+
+	-- Left column
+	local leftColumn = Instance.new("Frame")
+	leftColumn.Name = "LeftColumn"
+	leftColumn.Size = UDim2.new(0.48, 0, 1, 0)
+	leftColumn.Position = UDim2.new(0, 0, 0, 0)
+	leftColumn.BackgroundTransparency = 1
+	leftColumn.BorderSizePixel = 0
+	leftColumn.Parent = gridContainer
+
+	-- Right column
+	local rightColumn = Instance.new("Frame")
+	rightColumn.Name = "RightColumn"
+	rightColumn.Size = UDim2.new(0.48, 0, 1, 0)
+	rightColumn.Position = UDim2.new(0.52, 0, 0, 0)
+	rightColumn.BackgroundTransparency = 1
+	rightColumn.BorderSizePixel = 0
+	rightColumn.Parent = gridContainer
+
+	-- Create toggles in 2-column layout
+	local tabData = tabContents[tabName]
+	if tabData then
+		local toggleIndex = 1
+		for i, toggleName in ipairs(tabData.items) do
+			if i % 2 == 1 then
+				createToggle(leftColumn, toggleName, math.ceil(i / 2))
+			else
+				createToggle(rightColumn, toggleName, math.ceil(i / 2))
+			end
+		end
+	end
+
+	return tabContent
+end
+
+-- ============================================================================
+-- CRIAR TODOS OS TAB CONTENTS / CREATE ALL TAB CONTENTS
+-- ============================================================================
+
+local tabContentFrames = {}
+for _, tabName in ipairs(allTabs) do
+	tabContentFrames[tabName] = createTabContent(tabName)
+end
+
+-- ============================================================================
+-- TABS REFERENCE DICTIONARY
+-- ============================================================================
+
+local tabReferences = {}
+
+-- ============================================================================
+-- FUNÇÃO PARA CRIAR ABA / FUNCTION TO CREATE TAB
+-- ============================================================================
+
+local function createTab(tabName, index)
+	local yOffset = (index - 1) * 50
+	
+	local tabFrame = Instance.new("Frame")
+	tabFrame.Name = tabName .. "TabFrame"
+	tabFrame.Size = UDim2.new(1, 0, 0, 45)
+	tabFrame.Position = UDim2.new(0, 0, 0, yOffset)
+	tabFrame.BackgroundTransparency = 1
+	tabFrame.BorderSizePixel = 0
+	tabFrame.Parent = tabsSidebar
+	
+	local tabButton = Instance.new("TextButton")
+	tabButton.Name = tabName .. "Button"
+	tabButton.Text = tabName
+	tabButton.TextColor3 = COLOR_WHITE
+	tabButton.Font = Enum.Font.GothamBold
+	tabButton.TextSize = 16
+	tabButton.BackgroundTransparency = 1
+	tabButton.BorderSizePixel = 0
+	tabButton.Size = UDim2.new(1, 0, 1, 0)
+	tabButton.Position = UDim2.new(0, 0, 0, 0)
+	tabButton.TextXAlignment = Enum.TextXAlignment.Center
+	tabButton.TextYAlignment = Enum.TextYAlignment.Center
+	tabButton.Parent = tabFrame
+	
+	local indicator = Instance.new("Frame")
+	indicator.Name = tabName .. "Indicator"
+	indicator.Size = UDim2.new(0, 4, 0.6, 0)
+	indicator.Position = UDim2.new(-0.1, 0, 0.2, 0)
+	indicator.BackgroundColor3 = COLOR_NEON_PURPLE
+	indicator.BorderSizePixel = 0
+	indicator.Visible = (tabName == "HOME")
+	indicator.Parent = tabFrame
+
+	local indicatorCorner = Instance.new("UICorner")
+	indicatorCorner.CornerRadius = UDim.new(0, 2)
+	indicatorCorner.Parent = indicator
+	
+	tabReferences[tabName] = {
+		button = tabButton,
+		indicator = indicator,
+		frame = tabFrame
+	}
+	
+	tabButton.MouseButton1Click:Connect(function()
+		selectedTab = tabName
+		
+		for tabNameKey, tabRef in pairs(tabReferences) do
+			tabRef.indicator.Visible = false
+			if tabContentFrames[tabNameKey] then
+				tabContentFrames[tabNameKey].Visible = false
+			end
+		end
+		
+		indicator.Visible = true
+		if tabContentFrames[tabName] then
+			tabContentFrames[tabName].Visible = true
+		end
+		
+		print("[GS MENU] Aba selecionada: " .. tabName)
+	end)
+
+	-- Hover effect
+	tabButton.MouseEnter:Connect(function()
+		tabButton.TextColor3 = COLOR_NEON_PURPLE
+	end)
+
+	tabButton.MouseLeave:Connect(function()
+		if tabName ~= selectedTab then
+			tabButton.TextColor3 = COLOR_WHITE
+		end
+	end)
+end
+
+-- ============================================================================
+-- CREATE ALL TABS
+-- ============================================================================
+
+for index, tabName in ipairs(allTabs) do
+	createTab(tabName, index)
+end
+
+-- ============================================================================
+-- DRAG SYSTEM
+-- ============================================================================
+
+headerBar.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragState.isDragging = true
+		dragState.dragStart = input.Position
+		dragState.startPos = headerBar.Position
+		
+		dragState.dragInput = input.Changed:Connect(function()
+			if dragState.isDragging then
+				local delta = input.Position - dragState.dragStart
+				headerBar.Position = dragState.startPos + UDim2.new(0, delta.X, 0, delta.Y)
+				mainContent.Position = dragState.startPos + UDim2.new(0, delta.X, 0, delta.Y + 50)
+			end
+		end)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if dragState.isDragging then
+			dragState.isDragging = false
+			if dragState.dragInput then
+				dragState.dragInput:Disconnect()
+				dragState.dragInput = nil
+			end
+		end
+	end
+end)
+
+-- ============================================================================
+-- CONFIRMATION PRINT
+-- ============================================================================
+
+print("[GS MENU] ✓ Menu V4 inicializado com sucesso!")
+print("[GS MENU] ✓ Nova interface com grid 2-colunas ativada!")
+print("[GS MENU] ✓ Abas: HOME, COMBATE, VISUAL, CAR, TROLL")
